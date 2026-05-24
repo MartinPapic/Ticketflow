@@ -49,8 +49,21 @@ Write-Host "¡Microservicios levantados y escuchando peticiones!" -ForegroundCol
 Write-Host "`n[4/4] Ejecutando batería de pruebas Newman en consola en tiempo real..." -ForegroundColor Yellow
 Write-Host "---------------------------------------------------------------------" -ForegroundColor Cyan
 
+# Definición robusta de rutas absolutas
+$ScriptDir = $PSScriptRoot
+if (-not $ScriptDir) {
+    $ScriptDir = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
+}
+if (-not $ScriptDir -or -not (Test-Path $ScriptDir)) {
+    $ScriptDir = Get-Location
+}
+$ParentDir = Split-Path -Parent -Path $ScriptDir
+$CollectionPath = Join-Path -Path $ParentDir -ChildPath "TicketFlow.postman_collection.json"
+
+Write-Host "Ejecutando colección desde: $CollectionPath" -ForegroundColor DarkGray
+
 # Se ejecuta newman directamente para que la salida a color y tablas se muestren en la consola
-npx newman run "$PSScriptRoot\..\TicketFlow.postman_collection.json" --reporters cli
+npx newman run "$CollectionPath" --reporters cli
 
 Write-Host "---------------------------------------------------------------------" -ForegroundColor Cyan
 Write-Host "Pruebas finalizadas." -ForegroundColor Green
