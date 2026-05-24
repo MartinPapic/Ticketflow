@@ -1,5 +1,7 @@
 package com.ticketflow.report_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.report_service.DTO.ReportDTO;
 import com.ticketflow.report_service.Model.Report;
 import com.ticketflow.report_service.Service.ReportService;
@@ -21,10 +23,10 @@ public class ReportController {
 
     @GetMapping
     public ResponseEntity<List<Report>> buscarTodos() {
-        log.info("Buscando todos los reportes");
+        log.info("Petición GET para listar todos los Reports");
         List<Report> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron reportes");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Report");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class ReportController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Report> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando reporte con ID: {}", id);
+        log.info("Petición GET para obtener Report con ID: {}", id);
         Report entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Reporte con ID: {} no encontrado", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -57,8 +55,8 @@ public class ReportController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando reporte con ID: {}", id);
+        log.info("Petición DELETE para eliminar Report con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

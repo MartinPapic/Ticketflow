@@ -1,5 +1,7 @@
 package com.ticketflow.reservation_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.reservation_service.DTO.ReservationDTO;
 import com.ticketflow.reservation_service.Model.Reservation;
 import com.ticketflow.reservation_service.Service.ReservationService;
@@ -21,10 +23,10 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<Reservation>> buscarTodos() {
-        log.info("Buscando todas las reservaciones");
+        log.info("Petición GET para listar todos los Reservations");
         List<Reservation> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron reservaciones");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Reservation");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Reservation> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando reservación con ID: {}", id);
+        log.info("Petición GET para obtener Reservation con ID: {}", id);
         Reservation entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Reservación con ID: {} no encontrada", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -58,8 +56,8 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando reservación con ID: {}", id);
+        log.info("Petición DELETE para eliminar Reservation con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

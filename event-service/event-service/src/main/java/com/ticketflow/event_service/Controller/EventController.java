@@ -1,5 +1,7 @@
 package com.ticketflow.event_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.event_service.DTO.EventDTO;
 import com.ticketflow.event_service.Model.Event;
 import com.ticketflow.event_service.Service.EventService;
@@ -21,10 +23,10 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<List<Event>> buscarTodos() {
-        log.info("Buscando todos los eventos");
+        log.info("Petición GET para listar todos los Events");
         List<Event> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron eventos");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Event");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class EventController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Event> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando evento con ID: {}", id);
+        log.info("Petición GET para obtener Event con ID: {}", id);
         Event entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Evento con ID: {} no encontrado", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -58,8 +56,8 @@ public class EventController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando evento con ID: {}", id);
+        log.info("Petición DELETE para eliminar Event con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

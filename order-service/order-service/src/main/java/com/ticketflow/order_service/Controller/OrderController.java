@@ -1,5 +1,7 @@
 package com.ticketflow.order_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.order_service.DTO.OrderDTO;
 import com.ticketflow.order_service.Model.Order;
 import com.ticketflow.order_service.Service.OrderService;
@@ -21,10 +23,10 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> buscarTodos() {
-        log.info("Buscando todas las órdenes");
+        log.info("Petición GET para listar todos los Orders");
         List<Order> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron órdenes");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Order");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando orden con ID: {}", id);
+        log.info("Petición GET para obtener Order con ID: {}", id);
         Order entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Orden con ID: {} no encontrada", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -68,8 +66,8 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando orden con ID: {}", id);
+        log.info("Petición DELETE para eliminar Order con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

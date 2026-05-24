@@ -1,5 +1,7 @@
 package com.ticketflow.notification_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.notification_service.DTO.NotificationDTO;
 import com.ticketflow.notification_service.Model.Notification;
 import com.ticketflow.notification_service.Service.NotificationService;
@@ -21,10 +23,10 @@ public class NotificationController {
 
     @GetMapping
     public ResponseEntity<List<Notification>> buscarTodos() {
-        log.info("Buscando todas las notificaciones");
+        log.info("Petición GET para listar todos los Notifications");
         List<Notification> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron notificaciones");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Notification");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class NotificationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Notification> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando notificación con ID: {}", id);
+        log.info("Petición GET para obtener Notification con ID: {}", id);
         Notification entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Notificación con ID: {} no encontrada", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -58,8 +56,8 @@ public class NotificationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando notificación con ID: {}", id);
+        log.info("Petición DELETE para eliminar Notification con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

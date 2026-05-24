@@ -1,5 +1,10 @@
 package com.ticketflow.order_service.Service;
 
+import com.ticketflow.order_service.Exception.ResourceNotFoundException;
+import com.ticketflow.order_service.Exception.BusinessValidationException;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ticketflow.order_service.Client.UserClient;
 import com.ticketflow.order_service.Model.Order;
 import com.ticketflow.order_service.Repository.OrderRepository;
@@ -11,6 +16,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Transactional(readOnly = true)
 public class OrderService {
 
     @Autowired
@@ -20,13 +26,17 @@ public class OrderService {
     private UserClient userClient;
 
     public List<Order> buscarTodos() {
+        log.info("Buscando todos los registros de Order");
         return repository.findAll();
     }
 
     public Order buscarPorId(Long id) {
-        return repository.findById(id).orElse(null);
+        log.info("Buscando Order con ID: {}", id);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Order con ID " + id + " no existe."));
     }
 
+    @Transactional
     public Order crear(Order entity) {
         log.info("Validando existencia del usuario ID: {} para la orden", entity.getUserId());
         
@@ -34,17 +44,24 @@ public class OrderService {
             Object user = userClient.buscarPorId(entity.getUserId());
             if (user == null) {
                 log.error("Usuario ID: {} no encontrado. Abortando orden.", entity.getUserId());
-                throw new RuntimeException("Usuario no existe");
+                throw new ResourceNotFoundException("El usuario asociado ID " + entity.getUserId() + " no existe.");
             }
             log.info("Usuario validado. Guardando orden.");
             return repository.save(entity);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Error al validar usuario con user-service: {}", e.getMessage());
-            throw new RuntimeException("Error en validación de usuario: " + e.getMessage());
+            throw new BusinessValidationException("Error en validación de usuario: " + e.getMessage());
         }
     }
 
+    @Transactional
     public void eliminar(Long id) {
+        log.info("Eliminando Order con ID: {}", id);
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("No se puede eliminar. El registro de Order con ID " + id + " no existe.");
+        }
         repository.deleteById(id);
     }
 }

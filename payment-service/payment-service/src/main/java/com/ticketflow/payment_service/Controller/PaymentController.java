@@ -1,5 +1,7 @@
 package com.ticketflow.payment_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.payment_service.DTO.PaymentDTO;
 import com.ticketflow.payment_service.Model.Payment;
 import com.ticketflow.payment_service.Service.PaymentService;
@@ -21,10 +23,10 @@ public class PaymentController {
 
     @GetMapping
     public ResponseEntity<List<Payment>> buscarTodos() {
-        log.info("Buscando todos los pagos");
+        log.info("Petición GET para listar todos los Payments");
         List<Payment> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron pagos");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Payment");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Payment> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando pago con ID: {}", id);
+        log.info("Petición GET para obtener Payment con ID: {}", id);
         Payment entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Pago con ID: {} no encontrado", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -58,8 +56,8 @@ public class PaymentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando pago con ID: {}", id);
+        log.info("Petición DELETE para eliminar Payment con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

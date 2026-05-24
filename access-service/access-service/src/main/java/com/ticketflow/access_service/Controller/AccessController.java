@@ -1,5 +1,7 @@
 package com.ticketflow.access_service.Controller;
 
+import org.springframework.http.HttpStatus;
+
 import com.ticketflow.access_service.DTO.AccessDTO;
 import com.ticketflow.access_service.Model.Access;
 import com.ticketflow.access_service.Service.AccessService;
@@ -21,10 +23,10 @@ public class AccessController {
 
     @GetMapping
     public ResponseEntity<List<Access>> buscarTodos() {
-        log.info("Buscando todos los registros de acceso");
+        log.info("Petición GET para listar todos los Accesss");
         List<Access> lista = service.buscarTodos();
-        if(lista.isEmpty()){
-            log.warn("No se encontraron registros de acceso");
+        if (lista.isEmpty()) {
+            log.warn("No se encontraron registros de Access");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
@@ -32,12 +34,8 @@ public class AccessController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Access> buscarPorId(@PathVariable Long id) {
-        log.info("Buscando registro de acceso con ID: {}", id);
+        log.info("Petición GET para obtener Access con ID: {}", id);
         Access entity = service.buscarPorId(id);
-        if (entity == null) {
-            log.error("Registro de acceso con ID: {} no encontrado", id);
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(entity);
     }
 
@@ -57,8 +55,8 @@ public class AccessController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        log.info("Eliminando registro de acceso con ID: {}", id);
+        log.info("Petición DELETE para eliminar Access con ID: {}", id);
         service.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
