@@ -48,10 +48,21 @@ public class OrderController {
         entity.setUserId(dto.getUserId());
         entity.setTotalAmount(dto.getTotalAmount());
         entity.setOrderDate(dto.getOrderDate());
-        entity.setStatus(dto.getStatus());
+        entity.setStatus(dto.getStatus() != null ? dto.getStatus() : "PENDING");
+        
+        if (dto.getItems() != null) {
+            java.util.List<com.ticketflow.order_service.Model.OrderItem> items = dto.getItems().stream().map(itemDto -> {
+                com.ticketflow.order_service.Model.OrderItem item = new com.ticketflow.order_service.Model.OrderItem();
+                item.setTicketId(itemDto.getTicketId());
+                item.setPrice(itemDto.getPrice());
+                item.setOrder(entity);
+                return item;
+            }).collect(java.util.stream.Collectors.toList());
+            entity.setItems(items);
+        }
         
         Order saved = service.crear(entity);
-        log.info("Orden creada exitosamente. ID: {}", saved.getId());
+        log.info("Orden creada exitosamente con sus ítems. ID: {}", saved.getId());
         return ResponseEntity.ok(saved);
     }
 

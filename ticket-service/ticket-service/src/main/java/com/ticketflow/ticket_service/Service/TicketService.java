@@ -34,13 +34,15 @@ public class TicketService {
             Object event = eventClient.buscarPorId(entity.getEventId());
             if (event == null) {
                 log.error("El evento con ID: {} no existe. No se puede crear el ticket.", entity.getEventId());
-                throw new RuntimeException("Evento no encontrado");
+                throw new com.ticketflow.ticket_service.Exception.ResourceNotFoundException("El evento con ID " + entity.getEventId() + " no existe.");
             }
             log.info("Evento validado correctamente. Procediendo a guardar el ticket.");
             return repository.save(entity);
+        } catch (com.ticketflow.ticket_service.Exception.ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Error al comunicarse con el servicio de eventos: {}", e.getMessage());
-            throw new RuntimeException("Error de validación externa: " + e.getMessage());
+            throw new com.ticketflow.ticket_service.Exception.BusinessValidationException("Fallo al validar evento de forma remota: " + e.getMessage());
         }
     }
 
