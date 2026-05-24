@@ -54,6 +54,20 @@ public class EventController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Event> actualizar(@PathVariable Long id, @Valid @RequestBody EventDTO dto) {
+        log.info("Petición PUT para actualizar Event con ID: {}", id);
+        Event entity = new Event();
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setVenueId(dto.getVenueId());
+        entity.setDate(dto.getDate());
+        entity.setStatus(dto.getStatus());
+        
+        Event updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Event con ID: {}", id);

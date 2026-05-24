@@ -56,6 +56,20 @@ public class TicketController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Ticket> actualizar(@PathVariable Long id, @Valid @RequestBody TicketDTO dto) {
+        log.info("Petición PUT para actualizar ticket con ID: {}", id);
+        Ticket entity = new Ticket();
+        entity.setOrderId(dto.getOrderId());
+        entity.setEventId(dto.getEventId());
+        entity.setSeatId(dto.getSeatId());
+        entity.setPrice(dto.getPrice());
+        entity.setStatus(dto.getStatus());
+        
+        Ticket updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Eliminando ticket con ID: {}", id);

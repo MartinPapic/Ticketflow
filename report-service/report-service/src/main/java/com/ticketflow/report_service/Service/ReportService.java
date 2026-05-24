@@ -47,4 +47,18 @@ public class ReportService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Report actualizar(Long id, Report entity) {
+        log.info("Actualizando Report con ID: {}", id);
+        Report existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Report con ID " + id + " no existe."));
+        
+        existente.setName(entity.getName());
+        existente.setType(entity.getType());
+        existente.setGeneratedAt(entity.getGeneratedAt());
+        existente.setFileUrl(entity.getFileUrl());
+        
+        return repository.save(existente);
+    }
 }

@@ -64,6 +64,30 @@ public class OrderController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Order> actualizar(@PathVariable Long id, @Valid @RequestBody OrderDTO dto) {
+        log.info("Petición PUT para actualizar Order con ID: {}", id);
+        Order entity = new Order();
+        entity.setUserId(dto.getUserId());
+        entity.setTotalAmount(dto.getTotalAmount());
+        entity.setOrderDate(dto.getOrderDate());
+        entity.setStatus(dto.getStatus() != null ? dto.getStatus() : "PENDING");
+        
+        if (dto.getItems() != null) {
+            java.util.List<com.ticketflow.order_service.Model.OrderItem> items = dto.getItems().stream().map(itemDto -> {
+                com.ticketflow.order_service.Model.OrderItem item = new com.ticketflow.order_service.Model.OrderItem();
+                item.setTicketId(itemDto.getTicketId());
+                item.setPrice(itemDto.getPrice());
+                item.setOrder(entity);
+                return item;
+            }).collect(java.util.stream.Collectors.toList());
+            entity.setItems(items);
+        }
+        
+        Order updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Order con ID: {}", id);

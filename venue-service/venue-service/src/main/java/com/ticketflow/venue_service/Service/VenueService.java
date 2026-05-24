@@ -47,4 +47,17 @@ public class VenueService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Venue actualizar(Long id, Venue entity) {
+        log.info("Actualizando Venue con ID: {}", id);
+        Venue existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Venue con ID " + id + " no existe."));
+        
+        existente.setName(entity.getName());
+        existente.setAddress(entity.getAddress());
+        existente.setCapacity(entity.getCapacity());
+        
+        return repository.save(existente);
+    }
 }

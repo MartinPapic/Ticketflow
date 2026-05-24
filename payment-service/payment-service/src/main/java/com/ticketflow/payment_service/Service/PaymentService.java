@@ -64,4 +64,32 @@ public class PaymentService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Payment actualizar(Long id, Payment entity) {
+        log.info("Actualizando Payment con ID: {}", id);
+        Payment existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Payment con ID " + id + " no existe."));
+        
+        try {
+            Object order = orderClient.buscarPorId(entity.getOrderId());
+            if (order == null) {
+                log.error("Orden ID: {} no encontrada. Pago rechazado.", entity.getOrderId());
+                throw new ResourceNotFoundException("La orden asociada ID " + entity.getOrderId() + " no existe.");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error al comunicarse con order-service: {}", e.getMessage());
+            throw new BusinessValidationException("Error en validación de orden: " + e.getMessage());
+        }
+
+        existente.setOrderId(entity.getOrderId());
+        existente.setAmount(entity.getAmount());
+        existente.setPaymentMethod(entity.getPaymentMethod());
+        existente.setPaymentDate(entity.getPaymentDate());
+        existente.setStatus(entity.getStatus());
+        
+        return repository.save(existente);
+    }
 }

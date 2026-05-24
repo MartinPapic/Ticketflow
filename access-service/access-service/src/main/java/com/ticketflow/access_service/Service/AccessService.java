@@ -38,11 +38,20 @@ public class AccessService {
 
     @Transactional
     public Access crear(Access entity) {
-        log.info("Creando nuevo registro de Access");
-        return repository.save(entity);
-    } catch (Exception e) {
+        log.info("Validando ticket ID: {} antes de registrar acceso", entity.getTicketId());
+        try {
+            Object ticket = ticketClient.buscarPorId(entity.getTicketId());
+            if (ticket == null) {
+                log.error("Ticket ID: {} no encontrado. Acceso denegado.", entity.getTicketId());
+                throw new ResourceNotFoundException("El ticket asociado ID " + entity.getTicketId() + " no existe.");
+            }
+            log.info("Ticket validado correctamente. Guardando registro de acceso.");
+            return repository.save(entity);
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
             log.error("Error al validar ticket con ticket-service: {}", e.getMessage());
-            throw new RuntimeException("Error de validación de acceso: " + e.getMessage());
+            throw new BusinessValidationException("Error de validación de acceso: " + e.getMessage());
         }
     }
 
@@ -53,5 +62,32 @@ public class AccessService {
             throw new ResourceNotFoundException("No se puede eliminar. El registro de Access con ID " + id + " no existe.");
         }
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public Access actualizar(Long id, Access entity) {
+        log.info("Actualizando Access con ID: {}", id);
+        Access existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Access con ID " + id + " no existe."));
+        
+        try {
+            Object ticket = ticketClient.buscarPorId(entity.getTicketId());
+            if (ticket == null) {
+                log.error("Ticket ID: {} no encontrado. Acceso denegado.", entity.getTicketId());
+                throw new ResourceNotFoundException("El ticket asociado ID " + entity.getTicketId() + " no existe.");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error al validar ticket con ticket-service: {}", e.getMessage());
+            throw new BusinessValidationException("Error de validación de acceso: " + e.getMessage());
+        }
+
+        existente.setTicketId(entity.getTicketId());
+        existente.setGate(entity.getGate());
+        existente.setAccessTime(entity.getAccessTime());
+        existente.setStatus(entity.getStatus());
+        
+        return repository.save(existente);
     }
 }

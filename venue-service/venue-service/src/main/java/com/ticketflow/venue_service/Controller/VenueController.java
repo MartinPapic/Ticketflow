@@ -52,6 +52,18 @@ public class VenueController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Venue> actualizar(@PathVariable Long id, @Valid @RequestBody VenueDTO dto) {
+        log.info("Petición PUT para actualizar Venue con ID: {}", id);
+        Venue entity = new Venue();
+        entity.setName(dto.getName());
+        entity.setAddress(dto.getAddress());
+        entity.setCapacity(dto.getCapacity());
+        
+        Venue updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Venue con ID: {}", id);

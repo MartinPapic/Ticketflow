@@ -56,6 +56,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<User> actualizar(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+        log.info("Petición PUT para actualizar usuario con ID: {}", id);
+        User entity = new User();
+        entity.setUsername(dto.getUsername());
+        entity.setEmail(dto.getEmail());
+        entity.setPassword(dto.getPassword());
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setPhoneNumber(dto.getPhoneNumber());
+        entity.setRole(dto.getRole() != null ? dto.getRole() : "CLIENT");
+        entity.setActive(dto.getActive() != null ? dto.getActive() : true);
+        
+        User updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar usuario con ID: {}", id);

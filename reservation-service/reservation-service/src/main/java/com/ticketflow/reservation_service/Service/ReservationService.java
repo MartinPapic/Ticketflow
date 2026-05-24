@@ -77,4 +77,40 @@ public class ReservationService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Reservation actualizar(Long id, Reservation entity) {
+        log.info("Actualizando Reservation con ID: {}", id);
+        Reservation existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Reservation con ID " + id + " no existe."));
+        
+        try {
+            // Validar usuario
+            Object user = userClient.buscarPorId(entity.getUserId());
+            if (user == null) {
+                log.error("Usuario ID: {} no existe", entity.getUserId());
+                throw new ResourceNotFoundException("El usuario asociado ID " + entity.getUserId() + " no existe.");
+            }
+
+            // Validar evento
+            Object event = eventClient.buscarPorId(entity.getEventId());
+            if (event == null) {
+                log.error("Evento ID: {} no existe", entity.getEventId());
+                throw new ResourceNotFoundException("El evento asociado ID " + entity.getEventId() + " no existe.");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Fallo en la comunicación inter-servicio: {}", e.getMessage());
+            throw new BusinessValidationException("Error de validación: " + e.getMessage());
+        }
+
+        existente.setUserId(entity.getUserId());
+        existente.setEventId(entity.getEventId());
+        existente.setSeatId(entity.getSeatId());
+        existente.setStatus(entity.getStatus());
+        existente.setExpirationTime(entity.getExpirationTime());
+        
+        return repository.save(existente);
+    }
 }

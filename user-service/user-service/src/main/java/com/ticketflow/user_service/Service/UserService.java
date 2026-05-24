@@ -43,4 +43,22 @@ public class UserService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public User actualizar(Long id, User entity) {
+        log.info("Actualizando usuario con ID: {}", id);
+        User existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID " + id + " no existe."));
+        
+        existente.setUsername(entity.getUsername());
+        existente.setEmail(entity.getEmail());
+        existente.setPassword(entity.getPassword());
+        existente.setFirstName(entity.getFirstName());
+        existente.setLastName(entity.getLastName());
+        existente.setPhoneNumber(entity.getPhoneNumber());
+        existente.setRole(entity.getRole());
+        existente.setActive(entity.getActive());
+        
+        return repository.save(existente);
+    }
 }

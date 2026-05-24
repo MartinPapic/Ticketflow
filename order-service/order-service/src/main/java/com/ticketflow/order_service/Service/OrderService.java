@@ -64,4 +64,39 @@ public class OrderService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Order actualizar(Long id, Order entity) {
+        log.info("Actualizando Order con ID: {}", id);
+        Order existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Order con ID " + id + " no existe."));
+        
+        try {
+            Object user = userClient.buscarPorId(entity.getUserId());
+            if (user == null) {
+                log.error("Usuario ID: {} no encontrado. Abortando actualización de orden.", entity.getUserId());
+                throw new ResourceNotFoundException("El usuario asociado ID " + entity.getUserId() + " no existe.");
+            }
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error al validar usuario con user-service: {}", e.getMessage());
+            throw new BusinessValidationException("Error en validación de usuario: " + e.getMessage());
+        }
+
+        existente.setUserId(entity.getUserId());
+        existente.setTotalAmount(entity.getTotalAmount());
+        existente.setOrderDate(entity.getOrderDate());
+        existente.setStatus(entity.getStatus());
+        
+        existente.getItems().clear();
+        if (entity.getItems() != null) {
+            for (com.ticketflow.order_service.Model.OrderItem item : entity.getItems()) {
+                item.setOrder(existente);
+                existente.getItems().add(item);
+            }
+        }
+        
+        return repository.save(existente);
+    }
 }

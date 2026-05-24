@@ -47,4 +47,19 @@ public class EventService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Event actualizar(Long id, Event entity) {
+        log.info("Actualizando Event con ID: {}", id);
+        Event existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Event con ID " + id + " no existe."));
+        
+        existente.setName(entity.getName());
+        existente.setDescription(entity.getDescription());
+        existente.setVenueId(entity.getVenueId());
+        existente.setDate(entity.getDate());
+        existente.setStatus(entity.getStatus());
+        
+        return repository.save(existente);
+    }
 }

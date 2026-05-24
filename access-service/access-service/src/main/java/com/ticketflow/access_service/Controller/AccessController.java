@@ -53,6 +53,19 @@ public class AccessController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Access> actualizar(@PathVariable Long id, @Valid @RequestBody AccessDTO dto) {
+        log.info("Petición PUT para actualizar Access con ID: {}", id);
+        Access entity = new Access();
+        entity.setTicketId(dto.getTicketId());
+        entity.setGate(dto.getGate());
+        entity.setAccessTime(dto.getAccessTime());
+        entity.setStatus(dto.getStatus());
+        
+        Access updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Access con ID: {}", id);

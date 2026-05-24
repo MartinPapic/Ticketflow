@@ -47,4 +47,19 @@ public class NotificationService {
         }
         repository.deleteById(id);
     }
+
+    @Transactional
+    public Notification actualizar(Long id, Notification entity) {
+        log.info("Actualizando Notification con ID: {}", id);
+        Notification existente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El registro de Notification con ID " + id + " no existe."));
+        
+        existente.setUserId(entity.getUserId());
+        existente.setMessage(entity.getMessage());
+        existente.setType(entity.getType());
+        existente.setSentAt(entity.getSentAt());
+        existente.setStatus(entity.getStatus());
+        
+        return repository.save(existente);
+    }
 }

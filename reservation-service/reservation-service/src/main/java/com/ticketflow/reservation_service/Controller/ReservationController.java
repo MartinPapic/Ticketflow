@@ -54,6 +54,20 @@ public class ReservationController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Reservation> actualizar(@PathVariable Long id, @Valid @RequestBody ReservationDTO dto) {
+        log.info("Petición PUT para actualizar Reservation con ID: {}", id);
+        Reservation entity = new Reservation();
+        entity.setUserId(dto.getUserId());
+        entity.setEventId(dto.getEventId());
+        entity.setSeatId(dto.getSeatId());
+        entity.setStatus(dto.getStatus());
+        entity.setExpirationTime(dto.getExpirationTime());
+        
+        Reservation updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Reservation con ID: {}", id);

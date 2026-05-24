@@ -54,6 +54,20 @@ public class PaymentController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Payment> actualizar(@PathVariable Long id, @Valid @RequestBody PaymentDTO dto) {
+        log.info("Petición PUT para actualizar Payment con ID: {}", id);
+        Payment entity = new Payment();
+        entity.setOrderId(dto.getOrderId());
+        entity.setAmount(dto.getAmount());
+        entity.setPaymentMethod(dto.getPaymentMethod());
+        entity.setPaymentDate(dto.getPaymentDate());
+        entity.setStatus(dto.getStatus());
+        
+        Payment updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Payment con ID: {}", id);

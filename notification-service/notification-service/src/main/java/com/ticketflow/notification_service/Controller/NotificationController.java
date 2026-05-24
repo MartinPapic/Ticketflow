@@ -54,6 +54,20 @@ public class NotificationController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Notification> actualizar(@PathVariable Long id, @Valid @RequestBody NotificationDTO dto) {
+        log.info("Petición PUT para actualizar Notification con ID: {}", id);
+        Notification entity = new Notification();
+        entity.setUserId(dto.getUserId());
+        entity.setMessage(dto.getMessage());
+        entity.setType(dto.getType());
+        entity.setSentAt(dto.getSentAt());
+        entity.setStatus(dto.getStatus());
+        
+        Notification updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Notification con ID: {}", id);

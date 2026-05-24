@@ -53,6 +53,19 @@ public class ReportController {
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Report> actualizar(@PathVariable Long id, @Valid @RequestBody ReportDTO dto) {
+        log.info("Petición PUT para actualizar Report con ID: {}", id);
+        Report entity = new Report();
+        entity.setName(dto.getName());
+        entity.setType(dto.getType());
+        entity.setGeneratedAt(dto.getGeneratedAt());
+        entity.setFileUrl(dto.getFileUrl());
+        
+        Report updated = service.actualizar(id, entity);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Report con ID: {}", id);

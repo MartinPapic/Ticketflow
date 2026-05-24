@@ -46,7 +46,36 @@ public class TicketService {
         }
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public void eliminar(Long id) {
         repository.deleteById(id);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public Ticket actualizar(Long id, Ticket entity) {
+        log.info("Actualizando ticket con ID: {}", id);
+        Ticket existente = repository.findById(id)
+                .orElseThrow(() -> new com.ticketflow.ticket_service.Exception.ResourceNotFoundException("El ticket con ID " + id + " no existe."));
+        
+        try {
+            Object event = eventClient.buscarPorId(entity.getEventId());
+            if (event == null) {
+                log.error("El evento con ID: {} no existe. No se puede actualizar el ticket.", entity.getEventId());
+                throw new com.ticketflow.ticket_service.Exception.ResourceNotFoundException("El evento con ID " + entity.getEventId() + " no existe.");
+            }
+        } catch (com.ticketflow.ticket_service.Exception.ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error al comunicarse con el servicio de eventos: {}", e.getMessage());
+            throw new com.ticketflow.ticket_service.Exception.BusinessValidationException("Fallo al validar evento de forma remota: " + e.getMessage());
+        }
+
+        existente.setOrderId(entity.getOrderId());
+        existente.setEventId(entity.getEventId());
+        existente.setSeatId(entity.getSeatId());
+        existente.setPrice(entity.getPrice());
+        existente.setStatus(entity.getStatus());
+        
+        return repository.save(existente);
     }
 }
