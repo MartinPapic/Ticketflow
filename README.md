@@ -63,7 +63,7 @@ Para importar y validar manualmente los endpoints:
 
 ## 5. Pruebas Automatizadas en Tiempo Real (Newman & Scripts)
 
-Para agilizar el proceso de auditoría y demostración en vivo (por ejemplo, en la defensa de tu proyecto), el ecosistema cuenta con una batería de pruebas completamente automatizada mediante **Newman** y scripts de orquestación de un solo clic.
+Para agilizar el proceso de auditoría y demostración en vivo, el ecosistema cuenta con una batería de pruebas completamente automatizada mediante **Newman** y scripts de orquestación de un solo clic.
 
 La suite ejecuta **5 peticiones REST por cada uno de los 10 microservicios** (Listar todos, Buscar por ID, Crear, Actualizar con PUT y Eliminar con DELETE), completando **50 endpoints y 72 aserciones automáticas en menos de 12 segundos**.
 
