@@ -9,6 +9,165 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ticketflow-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  access-service:
+    build: ./access-service\access-service
+    container_name: access-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8088:8088"
+    networks:
+      - ticketflow-network
+
+  event-service:
+    build: ./event-service\event-service
+    container_name: event-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8082:8082"
+    networks:
+      - ticketflow-network
+
+  notification-service:
+    build: ./notification-service\notification-service
+    container_name: notification-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8089:8089"
+    networks:
+      - ticketflow-network
+
+  order-service:
+    build: ./order-service\order-service
+    container_name: order-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8084:8084"
+    networks:
+      - ticketflow-network
+
+  payment-service:
+    build: ./payment-service\payment-service
+    container_name: payment-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8085:8085"
+    networks:
+      - ticketflow-network
+
+  report-service:
+    build: ./report-service\report-service
+    container_name: report-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8090:8090"
+    networks:
+      - ticketflow-network
+
+  reservation-service:
+    build: ./reservation-service\reservation-service
+    container_name: reservation-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8086:8086"
+    networks:
+      - ticketflow-network
+
+  ticket-service:
+    build: ./ticket-service\ticket-service
+    container_name: ticket-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8083:8083"
+    networks:
+      - ticketflow-network
+
+  user-service:
+    build: ./user-service\user-service
+    container_name: user-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8081:8081"
+    networks:
+      - ticketflow-network
+
+  venue-service:
+    build: ./venue-service\venue-service
+    container_name: venue-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8087:8087"
+    networks:
+      - ticketflow-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8080:8080"
     networks:
       - ticketflow-network
 

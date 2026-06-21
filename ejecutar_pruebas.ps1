@@ -6,7 +6,7 @@
 # en tiempo real y finalmente apaga todos los procesos de forma segura.
 # =========================================================================================
 
-$services = @("user-service", "event-service", "ticket-service", "order-service", "payment-service", "reservation-service", "venue-service", "access-service", "notification-service", "report-service")
+$services = @("user-service", "event-service", "ticket-service", "order-service", "payment-service", "reservation-service", "venue-service", "access-service", "notification-service", "report-service", "api-gateway")
 
 Clear-Host
 Write-Host "=====================================================================" -ForegroundColor Cyan
@@ -20,10 +20,14 @@ Start-Sleep -Seconds 1
 Write-Host "Puertos y memoria JVM listos." -ForegroundColor Green
 
 # 2. Levantar todos los servicios independientes en segundo plano
-Write-Host "`n[2/4] Iniciando los 10 microservicios independientes..." -ForegroundColor Yellow
+Write-Host "`n[2/4] Iniciando los 11 componentes (10 microservicios + API Gateway)..." -ForegroundColor Yellow
 foreach ($s in $services) {
     Write-Host "  -> Iniciando ejecutable de: $s" -ForegroundColor DarkGray
-    $wd = "$PSScriptRoot\$s\$s"
+    if ($s -eq "api-gateway") {
+        $wd = "$PSScriptRoot\$s"
+    } else {
+        $wd = "$PSScriptRoot\$s\$s"
+    }
     $jar = "target\$s-0.0.1-SNAPSHOT.jar"
     
     if (-Not (Test-Path "$wd\$jar")) {

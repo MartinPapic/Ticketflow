@@ -10,17 +10,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/order")
 @Slf4j
+@Tag(name = "Order", description = "API for Order operations")
 public class OrderController {
 
     @Autowired
     private OrderService service;
 
+    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
     @GetMapping
     public ResponseEntity<List<Order>> buscarTodos() {
         log.info("Petición GET para listar todos los Orders");
@@ -32,6 +36,7 @@ public class OrderController {
         return ResponseEntity.ok(lista);
     }
 
+    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
     @GetMapping("/{id}")
     public ResponseEntity<Order> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para obtener Order con ID: {}", id);
@@ -39,6 +44,7 @@ public class OrderController {
         return ResponseEntity.ok(entity);
     }
 
+    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
     @PostMapping
     public ResponseEntity<Order> crear(@Valid @RequestBody OrderDTO dto) {
         log.info("Creando nueva orden para el usuario ID: {}", dto.getUserId());
@@ -64,6 +70,7 @@ public class OrderController {
         return ResponseEntity.ok(saved);
     }
 
+    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
     @PutMapping("/{id}")
     public ResponseEntity<Order> actualizar(@PathVariable Long id, @Valid @RequestBody OrderDTO dto) {
         log.info("Petición PUT para actualizar Order con ID: {}", id);
@@ -88,6 +95,7 @@ public class OrderController {
         return ResponseEntity.ok(updated);
     }
 
+    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Order con ID: {}", id);

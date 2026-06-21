@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "81f841c3-20ef-48c3-825c-d30ff59bcec6",
+		"_postman_id": "ae588cd2-c642-4e5e-9575-44dc706e6f27",
 		"name": "TicketFlow - Ecosistema de Microservicios",
-		"description": "Colección de pruebas para validar el ecosistema de 10 microservicios de TicketFlow. Incluye variables de entorno para una fácil portabilidad entre local y producción.",
+		"description": "Colecci\u00f3n de pruebas para validar el ecosistema de 10 microservicios a trav\u00e9s del API Gateway (Puerto 8080).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -10,17 +10,17 @@
 			"name": "user-service",
 			"item": [
 				{
-					"name": "Listar todos los usuarios",
+					"name": "Listar todos (user)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v1/user",
+							"raw": "http://localhost:8080/api/v1/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
@@ -31,38 +31,29 @@
 					"response": []
 				},
 				{
-					"name": "Crear Usuario - Exito",
+					"name": "Buscar por ID (user)",
 					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"username\": \"juanperez\",\n  \"email\": \"juan.perez@email.com\",\n  \"password\": \"seguridad123\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Perez\",\n  \"phoneNumber\": \"+56912345678\",\n  \"role\": \"CLIENT\",\n  \"active\": true\n}"
-						},
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/v1/user",
+							"raw": "http://localhost:8080/api/v1/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
-								"user"
+								"user",
+								"1"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Crear Usuario - Fallo Validación (Email Invalido)",
+					"name": "Crear (user)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -72,21 +63,75 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"username\": \"jp\",\n  \"email\": \"correo-invalido\",\n  \"password\": \"123\",\n  \"active\": true\n}"
-						},
 						"url": {
-							"raw": "http://localhost:8081/api/v1/user",
+							"raw": "http://localhost:8080/api/v1/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
 								"user"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@test.com\",\n  \"password\": \"123\",\n  \"role\": \"CLIENT\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (user)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/user/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@test.com\",\n  \"password\": \"123\",\n  \"role\": \"CLIENT\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (user)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/user/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"1"
 							]
 						}
 					},
@@ -98,17 +143,17 @@
 			"name": "event-service",
 			"item": [
 				{
-					"name": "Listar todos los eventos",
+					"name": "Listar todos (event)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/v1/event",
+							"raw": "http://localhost:8080/api/v1/event",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8082",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
@@ -119,7 +164,29 @@
 					"response": []
 				},
 				{
-					"name": "Crear Evento - Exito",
+					"name": "Buscar por ID (event)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/event/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"event",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (event)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -129,21 +196,75 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Concierto Rock Fest\",\n  \"description\": \"Festival de rock al aire libre\",\n  \"venueId\": 1,\n  \"date\": \"2026-10-15\",\n  \"status\": \"ACTIVE\"\n}"
-						},
 						"url": {
-							"raw": "http://localhost:8082/api/v1/event",
+							"raw": "http://localhost:8080/api/v1/event",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8082",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
 								"event"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Event\",\n  \"description\": \"Test\",\n  \"venueId\": 1,\n  \"date\": \"2026-10-15\",\n  \"status\": \"ACTIVE\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (event)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/event/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"event",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Event\",\n  \"description\": \"Test\",\n  \"venueId\": 1,\n  \"date\": \"2026-10-15\",\n  \"status\": \"ACTIVE\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (event)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/event/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"event",
+								"1"
 							]
 						}
 					},
@@ -155,17 +276,17 @@
 			"name": "ticket-service",
 			"item": [
 				{
-					"name": "Listar todos los tickets",
+					"name": "Listar todos (ticket)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8083/api/v1/ticket",
+							"raw": "http://localhost:8080/api/v1/ticket",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8083",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
@@ -176,38 +297,29 @@
 					"response": []
 				},
 				{
-					"name": "Crear Ticket con Evento Valido",
+					"name": "Buscar por ID (ticket)",
 					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"orderId\": 1,\n  \"eventId\": 1,\n  \"seatId\": 10,\n  \"price\": 25000.0,\n  \"status\": \"AVAILABLE\"\n}"
-						},
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "http://localhost:8083/api/v1/ticket",
+							"raw": "http://localhost:8080/api/v1/ticket/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8083",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
-								"ticket"
+								"ticket",
+								"1"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Crear Ticket con Evento Inexistente (Fallo Semantico 404)",
+					"name": "Crear (ticket)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -217,21 +329,75 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"orderId\": 1,\n  \"eventId\": 9999,\n  \"seatId\": 12,\n  \"price\": 25000.0,\n  \"status\": \"AVAILABLE\"\n}"
-						},
 						"url": {
-							"raw": "http://localhost:8083/api/v1/ticket",
+							"raw": "http://localhost:8080/api/v1/ticket",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8083",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
 								"ticket"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"eventId\": 1,\n  \"seatId\": 10,\n  \"price\": 100.0,\n  \"status\": \"AVAILABLE\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (ticket)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/ticket/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"ticket",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"eventId\": 1,\n  \"seatId\": 10,\n  \"price\": 100.0,\n  \"status\": \"AVAILABLE\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (ticket)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/ticket/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"ticket",
+								"1"
 							]
 						}
 					},
@@ -243,17 +409,17 @@
 			"name": "order-service",
 			"item": [
 				{
-					"name": "Listar todas las ordenes",
+					"name": "Listar todos (order)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8084/api/v1/order",
+							"raw": "http://localhost:8080/api/v1/order",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8084",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
@@ -264,7 +430,29 @@
 					"response": []
 				},
 				{
-					"name": "Crear Orden con Items (JPA Relacion)",
+					"name": "Buscar por ID (order)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (order)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -274,21 +462,873 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"userId\": 1,\n  \"totalAmount\": 50000.0,\n  \"orderDate\": \"2026-05-24\",\n  \"status\": \"PENDING\",\n  \"items\": [\n    {\n      \"ticketId\": 5,\n      \"price\": 25000.0\n    },\n    {\n      \"ticketId\": 6,\n      \"price\": 25000.0\n    }\n  ]\n}"
-						},
 						"url": {
-							"raw": "http://localhost:8084/api/v1/order",
+							"raw": "http://localhost:8080/api/v1/order",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8084",
+							"port": "8080",
 							"path": [
 								"api",
 								"v1",
 								"order"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"totalAmount\": 100.0,\n  \"orderDate\": \"2026-10-15\",\n  \"status\": \"PENDING\",\n  \"items\": [\n    {\n      \"ticketId\": 1,\n      \"price\": 100.0\n    }\n  ]\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (order)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"totalAmount\": 100.0,\n  \"orderDate\": \"2026-10-15\",\n  \"status\": \"PENDING\",\n  \"items\": [\n    {\n      \"ticketId\": 1,\n      \"price\": 100.0\n    }\n  ]\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (order)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payment-service",
+			"item": [
+				{
+					"name": "Listar todos (payment)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/payment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por ID (payment)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/payment/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"payment",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (payment)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/payment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"payment"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"amount\": 100.0,\n  \"paymentMethod\": \"CREDIT\",\n  \"status\": \"COMPLETED\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (payment)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/payment/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"payment",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"amount\": 100.0,\n  \"paymentMethod\": \"CREDIT\",\n  \"status\": \"COMPLETED\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (payment)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/payment/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"payment",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reservation-service",
+			"item": [
+				{
+					"name": "Listar todos (reservation)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reservation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reservation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por ID (reservation)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reservation/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reservation",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (reservation)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reservation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reservation"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"eventId\": 1,\n  \"seatId\": 10,\n  \"status\": \"RESERVED\",\n  \"expirationTime\": \"2026-10-15T10:00:00\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (reservation)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reservation/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reservation",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"eventId\": 1,\n  \"seatId\": 10,\n  \"status\": \"RESERVED\",\n  \"expirationTime\": \"2026-10-15T10:00:00\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (reservation)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reservation/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reservation",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "venue-service",
+			"item": [
+				{
+					"name": "Listar todos (venue)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/venue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"venue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por ID (venue)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/venue/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"venue",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (venue)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/venue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"venue"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Venue\",\n  \"address\": \"123 Test St\",\n  \"capacity\": 1000\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (venue)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/venue/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"venue",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Venue\",\n  \"address\": \"123 Test St\",\n  \"capacity\": 1000\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (venue)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/venue/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"venue",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "access-service",
+			"item": [
+				{
+					"name": "Listar todos (access)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/access",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"access"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por ID (access)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/access/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"access",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (access)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/access",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"access"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ticketId\": 1,\n  \"eventId\": 1,\n  \"accessTime\": \"2026-10-15T10:00:00\",\n  \"gate\": \"A1\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (access)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/access/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"access",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ticketId\": 1,\n  \"eventId\": 1,\n  \"accessTime\": \"2026-10-15T10:00:00\",\n  \"gate\": \"A1\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (access)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/access/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"access",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notification-service",
+			"item": [
+				{
+					"name": "Listar todos (notification)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/notification",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"notification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por ID (notification)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/notification/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"notification",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (notification)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/notification",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"notification"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"type\": \"EMAIL\",\n  \"message\": \"Test msg\",\n  \"sentAt\": \"2026-10-15T10:00:00\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (notification)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/notification/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"notification",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"type\": \"EMAIL\",\n  \"message\": \"Test msg\",\n  \"sentAt\": \"2026-10-15T10:00:00\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (notification)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/notification/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"notification",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "report-service",
+			"item": [
+				{
+					"name": "Listar todos (report)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por ID (report)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/report/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"report",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear (report)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"report"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"SALES\",\n  \"generatedAt\": \"2026-10-15T10:00:00\",\n  \"data\": \"{}\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar (report)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/report/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"report",
+								"1"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"SALES\",\n  \"generatedAt\": \"2026-10-15T10:00:00\",\n  \"data\": \"{}\"\n}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar (report)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/report/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"report",
+								"1"
 							]
 						}
 					},

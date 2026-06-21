@@ -1,87 +1,102 @@
 # TicketFlow - Ecosistema de Microservicios para Venta de Tickets
 
-TicketFlow es una plataforma robusta y distribuida de venta de entradas para eventos, estructurada mediante una **arquitectura de 10 microservicios** independientes utilizando **Java, Spring Boot, Spring Data JPA y MySQL**.
+## Descripción del Contexto del Proyecto
+TicketFlow es una plataforma robusta y distribuida diseñada para la gestión, venta y control de entradas para eventos. El ecosistema resuelve la problemática de alta concurrencia en la compra de boletos mediante una arquitectura distribuida basada en microservicios independientes, garantizando la escalabilidad, la trazabilidad de las transacciones y la separación de responsabilidades en dominios lógicos.
 
-## 1. Arquitectura del Ecosistema
-
-El sistema se divide en los siguientes 10 módulos de negocio acoplados de forma débil (*loosely coupled*):
-
-1.  **`user-service`** (Puerto `8081`): Gestión de usuarios, credenciales, roles (`CLIENT`, `ADMIN`, `VENUE_MANAGER`) y datos personales.
-2.  **`event-service`** (Puerto `8082`): Administración de eventos musicales, fechas, estados y asociaciones lógicas a recintos.
-3.  **`ticket-service`** (Puerto `8083`): Emisión de tickets físicos, asignación de precios y control de estados de venta (`AVAILABLE`, `SOLD`).
-4.  **`order-service`** (Puerto `8084`): Procesamiento de compras y creación de órdenes transaccionales.
-5.  **`payment-service`** (Puerto `8085`): Procesamiento de pagos, boletas de cobro e integración transaccional.
-6.  **`reservation-service`** (Puerto `8086`): Control temporal de reservas de asientos para evitar compras duplicadas.
-7.  **`venue-service`** (Puerto `8087`): Gestión de recintos, estadios, capacidades máximas y distribución espacial.
-8.  **`access-service`** (Puerto `8088`): Control de accesos físicos de usuarios al evento a través de la validación de códigos QR.
-9.  **`notification-service`** (Puerto `8089`): Despacho de notificaciones y confirmaciones por email de compras exitosas.
-10. **`report-service`** (Puerto `8090`): Generación de reportes ejecutivos de ventas, auditoría técnica de logs y estadísticas.
+## Equipo de Estudiantes
+- Martín Papic Vargas
 
 ---
 
-## 2. Tecnologías y Patrones Clave
+## Listado de Microservicios Implementados
+El sistema se divide en **10 microservicios** de negocio más un **API Gateway** centralizador, utilizando **Java, Spring Boot, Spring Data JPA y MySQL**:
 
-*   **Arquitectura CSR**: Cada microservicio sigue el patrón estricto de tres capas **Controller-Service-Repository**, garantizando separación de responsabilidades y modularidad.
-*   **Bases de Datos Autónomas (*Shared-Nothing*)**: Cada servicio posee su propia base de datos lógica en MySQL. Las relaciones lógicas inter-servicios se resuelven a nivel de aplicación mediante **OpenFeign** síncrono.
-*   **Relaciones Relacionales JPA**: El microservicio `order-service` implementa una relación física `@OneToMany` bidireccional entre la entidad principal `Order` y su detalle de compras `OrderItem`, propagando inserciones en cascada (`CascadeType.ALL`) y saneando registros desvinculados (`orphanRemoval = true`).
-*   **Manejo Global de Excepciones**: El sistema intercepta errores sintácticos de validación (`@Valid`, Bean Validation) y errores lógicos de negocio a través de `@ControllerAdvice` centralizados, retornando respuestas estructuradas consistentes en JSON.
-*   **Timeouts de Resiliencia**: Se configuran timeouts explícitos de conexión y lectura para Feign en los archivos `application.properties` para evitar la caída en cascada ante interrupciones de red.
+1.  **`user-service`** (Puerto interno `8081`): Gestión de usuarios, credenciales y roles.
+2.  **`event-service`** (Puerto interno `8082`): Administración de eventos musicales, fechas y estados.
+3.  **`ticket-service`** (Puerto interno `8083`): Emisión de tickets físicos, precios y control de estados de venta.
+4.  **`order-service`** (Puerto interno `8084`): Procesamiento de compras y creación de órdenes transaccionales.
+5.  **`payment-service`** (Puerto interno `8085`): Procesamiento de pagos y boletas de cobro.
+6.  **`reservation-service`** (Puerto interno `8086`): Control temporal de reservas de asientos.
+7.  **`venue-service`** (Puerto interno `8087`): Gestión de recintos, capacidades y distribución espacial.
+8.  **`access-service`** (Puerto interno `8088`): Control de accesos físicos al evento (validación de QR).
+9.  **`notification-service`** (Puerto interno `8089`): Despacho de notificaciones y confirmaciones por email.
+10. **`report-service`** (Puerto interno `8090`): Generación de reportes ejecutivos de ventas y estadísticas.
+11. **`api-gateway`** (Puerto externo `8080`): Enrutador centralizado (Spring Cloud Gateway).
 
 ---
 
-## 3. Guía de Despliegue Local
+## Rutas Principales del API Gateway
+Todas las peticiones del ecosistema deben pasar por el API Gateway en el puerto **`8080`**. El Gateway enruta las solicitudes al microservicio correspondiente basándose en los siguientes prefijos de ruta:
+
+- **Usuarios:** `http://localhost:8080/api/v1/user/**`
+- **Eventos:** `http://localhost:8080/api/v1/event/**`
+- **Tickets:** `http://localhost:8080/api/v1/ticket/**`
+- **Órdenes:** `http://localhost:8080/api/v1/order/**`
+- **Pagos:** `http://localhost:8080/api/v1/payment/**`
+- **Reservas:** `http://localhost:8080/api/v1/reservation/**`
+- **Recintos (Venue):** `http://localhost:8080/api/v1/venue/**`
+- **Accesos:** `http://localhost:8080/api/v1/access/**`
+- **Notificaciones:** `http://localhost:8080/api/v1/notification/**`
+- **Reportes:** `http://localhost:8080/api/v1/report/**`
+
+---
+
+## Enlaces a la Documentación Técnica (Swagger / OpenAPI)
+La documentación interactiva de la API está disponible localmente para cada microservicio. Una vez levantados los servicios, puedes acceder a las interfaces de Swagger UI en los siguientes enlaces:
+
+- Swagger User Service: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
+- Swagger Event Service: [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
+- Swagger Ticket Service: [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
+- Swagger Order Service: [http://localhost:8084/swagger-ui/index.html](http://localhost:8084/swagger-ui/index.html)
+- Swagger Payment Service: [http://localhost:8085/swagger-ui/index.html](http://localhost:8085/swagger-ui/index.html)
+- Swagger Reservation Service: [http://localhost:8086/swagger-ui/index.html](http://localhost:8086/swagger-ui/index.html)
+- Swagger Venue Service: [http://localhost:8087/swagger-ui/index.html](http://localhost:8087/swagger-ui/index.html)
+- Swagger Access Service: [http://localhost:8088/swagger-ui/index.html](http://localhost:8088/swagger-ui/index.html)
+- Swagger Notification Service: [http://localhost:8089/swagger-ui/index.html](http://localhost:8089/swagger-ui/index.html)
+- Swagger Report Service: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
+
+> *Nota: También se puede obtener la especificación JSON sin formato ingresando a `/v3/api-docs` en lugar de `/swagger-ui/index.html`.*
+
+---
+
+## Pruebas Unitarias
+El proyecto cuenta con una robusta suite de pruebas unitarias implementadas con **JUnit 5 y Mockito**, logrando una **cobertura superior al 80%** en la lógica de negocio (`Service`). Se han simulado las llamadas a los repositorios JPA y a los clientes externos (OpenFeign) asegurando que los entornos de prueba estén completamente aislados de la base de datos o de la red.
+
+---
+
+## Instrucciones Básicas de Ejecución (Local)
 
 ### Requisitos Previos
-*   Java JDK 17 o superior.
-*   Maven 3.8+.
-*   Docker & Docker Compose.
+- Java JDK 21 (o JDK 17 según compatibilidad).
+- Maven 3.8+.
+- Docker & Docker Compose (para la base de datos MySQL compartida).
 
-### Paso 1: Levantar la Base de Datos
-Ejecuta Docker Compose en la raíz del proyecto para iniciar el contenedor de MySQL:
-```bash
-docker-compose up -d
+### Opción A: Ejecución Automatizada de Pruebas y Despliegue (Recomendado)
+Para agilizar el proceso, contamos con un orquestador automatizado en la raíz del proyecto que levanta las bases de datos, arranca todos los servicios en segundo plano y ejecuta la colección de Postman (`TicketFlow.postman_collection.json`) usando **Newman** para verificar la integridad del sistema (End-to-End).
+
+Abre PowerShell en la raíz y ejecuta:
+```powershell
+.\ejecutar_pruebas.ps1
 ```
 
-### Paso 2: Compilar y Ejecutar los Servicios
-Puedes compilar y ejecutar cada microservicio de manera independiente. Ingresa al directorio de un servicio y ejecuta:
-```bash
-mvn clean install
-mvn spring-boot:run
-```
+### Opción B: Ejecución Manual Paso a Paso
+1. **Levantar la Base de Datos y API Gateway**:
+   En la raíz del proyecto, ejecuta Docker Compose para iniciar el contenedor MySQL (`ticketflow-db`) que inicializará todos los esquemas mediante `init.sql`.
+   ```bash
+   docker-compose up -d
+   ```
+2. **Levantar los Microservicios**:
+   En terminales separadas, entra a la carpeta de cada servicio y ejecuta:
+   ```bash
+   mvnw spring-boot:run
+   ```
+3. **Consumo de la API**:
+   Las peticiones deben ser enviadas a través de `localhost:8080` (API Gateway) usando los prefijos mencionados en la sección de Rutas.
 
 ---
 
-## 4. Pruebas de Integración (Postman)
-
-En la raíz del proyecto se incluye el archivo **`TicketFlow.postman_collection.json`** con la suite completa de pruebas.
-Para importar y validar manualmente los endpoints:
-1. Abre Postman.
-2. Haz clic en **Import** y selecciona el archivo JSON.
-3. Encontrarás peticiones estructuradas con payloads listos para probar flujos de éxito y fallos lógicos en los microservicios principales.
-
----
-
-## 5. Pruebas Automatizadas en Tiempo Real (Newman & Scripts)
-
-Para agilizar el proceso de auditoría y demostración en vivo, el ecosistema cuenta con una batería de pruebas completamente automatizada mediante **Newman** y scripts de orquestación de un solo clic.
-
-La suite ejecuta **5 peticiones REST por cada uno de los 10 microservicios** (Listar todos, Buscar por ID, Crear, Actualizar con PUT y Eliminar con DELETE), completando **50 endpoints y 72 aserciones automáticas en menos de 12 segundos**.
-
-### Cómo Ejecutar las Pruebas en Tiempo Real (Consola)
-
-Asegúrate de tener Docker Desktop iniciado con la base de datos MySQL corriendo. Luego, dirígete a la raíz del repositorio (`EV2/ticketflow/`) y elije uno de los siguientes métodos:
-
-*   **Método 1: Doble Clic (Windows - Recomendado)**:
-    Haz doble clic en el archivo **`ejecutar_pruebas.bat`**. Este script automatiza la evasión de directivas de ejecución de Windows, levanta los 10 servicios en puertos independientes en segundo plano, espera 25 segundos para la migración de Hibernate/Flyway, ejecuta Newman mostrando tablas a color e interactivas en tu consola y finalmente apaga todos los puertos limpiamente. La ventana se mantendrá abierta al finalizar para que audites los resultados.
-    
-*   **Método 2: PowerShell (Manual)**:
-    Abre PowerShell en esta carpeta y ejecuta:
-    ```powershell
-    powershell -ExecutionPolicy Bypass -File ejecutar_pruebas.ps1
-    ```
-
-### Interpretación de Resultados en Base de Datos Vacía (Clean DB)
-Al ejecutar el script contra una base de datos MySQL recién levantada (en blanco), obtendrás **59 aserciones fallidas** de un total de 72. Esto **representa un comportamiento exitoso y seguro del diseño arquitectónico**:
-1.  **Validación de Recursos (404)**: Los endpoints `GET`, `PUT` y `DELETE` para registros con ID 1 en una BD vacía devuelven correctamente `404 Resource Not Found` mapeado por nuestro `GlobalExceptionHandler` en lugar de tumbar el servidor con un error interno `500`.
-2.  **Integración síncrona con OpenFeign (422)**: Los servicios transaccionales (`ticket-service`, `order-service`, etc.) validan que sus IDs remotos existan antes de persistir datos. Al estar las tablas de eventos y usuarios en blanco en la BD vacía, **OpenFeign bloquea la transacción de forma segura y devuelve `422 Unprocessable Entity`**, previniendo inconsistencias lógicas en tu sistema distribuido.
-
+## Tecnologías Clave y Arquitectura
+- **Patrón CSR**: Estructura `Controller-Service-Repository` en todos los módulos.
+- **Comunicación REST**: Interacción síncrona mediante Spring Cloud OpenFeign, incluyendo un `FeignErrorDecoder` para el manejo centralizado de excepciones remotas.
+- **Configuración YAML y Perfiles**: Uso de `application.yml` separando configuraciones locales (`dev`) y de contenedor (`prod`).
+- **Control Global de Excepciones**: Interceptores `@ControllerAdvice` que formatean y estandarizan todas las respuestas de error en JSON.

@@ -10,17 +10,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/notification")
 @Slf4j
+@Tag(name = "Notification", description = "API for Notification operations")
 public class NotificationController {
 
     @Autowired
     private NotificationService service;
 
+    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
     @GetMapping
     public ResponseEntity<List<Notification>> buscarTodos() {
         log.info("Petición GET para listar todos los Notifications");
@@ -32,6 +36,7 @@ public class NotificationController {
         return ResponseEntity.ok(lista);
     }
 
+    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
     @GetMapping("/{id}")
     public ResponseEntity<Notification> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para obtener Notification con ID: {}", id);
@@ -39,6 +44,7 @@ public class NotificationController {
         return ResponseEntity.ok(entity);
     }
 
+    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
     @PostMapping
     public ResponseEntity<Notification> crear(@Valid @RequestBody NotificationDTO dto) {
         log.info("Enviando notificación tipo {} al usuario ID: {}", dto.getType(), dto.getUserId());
@@ -54,6 +60,7 @@ public class NotificationController {
         return ResponseEntity.ok(saved);
     }
 
+    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
     @PutMapping("/{id}")
     public ResponseEntity<Notification> actualizar(@PathVariable Long id, @Valid @RequestBody NotificationDTO dto) {
         log.info("Petición PUT para actualizar Notification con ID: {}", id);
@@ -68,6 +75,7 @@ public class NotificationController {
         return ResponseEntity.ok(updated);
     }
 
+    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Notification con ID: {}", id);

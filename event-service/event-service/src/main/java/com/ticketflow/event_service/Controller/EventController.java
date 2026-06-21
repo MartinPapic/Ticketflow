@@ -10,17 +10,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/event")
 @Slf4j
+@Tag(name = "Event", description = "API for Event operations")
 public class EventController {
 
     @Autowired
     private EventService service;
 
+    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
     @GetMapping
     public ResponseEntity<List<Event>> buscarTodos() {
         log.info("Petición GET para listar todos los Events");
@@ -32,6 +36,7 @@ public class EventController {
         return ResponseEntity.ok(lista);
     }
 
+    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
     @GetMapping("/{id}")
     public ResponseEntity<Event> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para obtener Event con ID: {}", id);
@@ -39,6 +44,7 @@ public class EventController {
         return ResponseEntity.ok(entity);
     }
 
+    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
     @PostMapping
     public ResponseEntity<Event> crear(@Valid @RequestBody EventDTO dto) {
         log.info("Creando nuevo evento: {}", dto.getName());
@@ -54,6 +60,7 @@ public class EventController {
         return ResponseEntity.ok(saved);
     }
 
+    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
     @PutMapping("/{id}")
     public ResponseEntity<Event> actualizar(@PathVariable Long id, @Valid @RequestBody EventDTO dto) {
         log.info("Petición PUT para actualizar Event con ID: {}", id);
@@ -68,6 +75,7 @@ public class EventController {
         return ResponseEntity.ok(updated);
     }
 
+    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Event con ID: {}", id);
