@@ -42,7 +42,13 @@ Todas las peticiones del ecosistema deben pasar por el API Gateway en el puerto 
 ---
 
 ## Enlaces a la Documentación Técnica (Swagger / OpenAPI)
-La documentación interactiva de la API está disponible localmente para cada microservicio. Una vez levantados los servicios, puedes acceder a las interfaces de Swagger UI en los siguientes enlaces:
+La documentación interactiva de la API está disponible localmente para cada microservicio. Para acceder a estas interfaces y probar los endpoints manualmente, te recomendamos levantar todo el ecosistema en segundo plano utilizando Docker Compose:
+
+1. Reconstruye las imágenes y levanta los contenedores:
+   ```bash
+   docker-compose up -d --build
+   ```
+2. Una vez que los servicios terminen de inicializarse (aprox. 1 minuto), abre tu navegador en los siguientes enlaces:
 
 - Swagger User Service: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 - Swagger Event Service: [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
@@ -55,7 +61,7 @@ La documentación interactiva de la API está disponible localmente para cada mi
 - Swagger Notification Service: [http://localhost:8089/swagger-ui/index.html](http://localhost:8089/swagger-ui/index.html)
 - Swagger Report Service: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
 
-> *Nota: También se puede obtener la especificación JSON sin formato ingresando a `/v3/api-docs` en lugar de `/swagger-ui/index.html`.*
+> *Nota: También se puede obtener la especificación JSON sin formato ingresando a `/v3/api-docs` en lugar de `/swagger-ui/index.html`. Para apagar los servicios, usa `docker-compose down`.*
 
 ---
 
