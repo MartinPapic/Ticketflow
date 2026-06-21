@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "Order", description = "Operaciones del microservicio de Order")
 @RestController
 @RequestMapping("/api/v1/order")
 @Slf4j
@@ -24,7 +25,7 @@ public class OrderController {
     @Autowired
     private OrderService service;
 
-    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
+    @Operation(summary = "Obtener todos los registros", description = "Retorna una lista completa de entidades")
     @GetMapping
     public ResponseEntity<List<Order>> buscarTodos() {
         log.info("Petición GET para listar todos los Orders");
@@ -36,7 +37,7 @@ public class OrderController {
         return ResponseEntity.ok(lista);
     }
 
-    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
+    @Operation(summary = "Buscar por ID", description = "Busca un registro específico por su identificador único")
     @GetMapping("/{id}")
     public ResponseEntity<Order> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para obtener Order con ID: {}", id);
@@ -44,7 +45,7 @@ public class OrderController {
         return ResponseEntity.ok(entity);
     }
 
-    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
+    @Operation(summary = "Crear nuevo registro", description = "Registra una nueva entidad en la base de datos")
     @PostMapping
     public ResponseEntity<Order> crear(@Valid @RequestBody OrderDTO dto) {
         log.info("Creando nueva orden para el usuario ID: {}", dto.getUserId());
@@ -70,7 +71,7 @@ public class OrderController {
         return ResponseEntity.ok(saved);
     }
 
-    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
+    @Operation(summary = "Actualizar registro", description = "Actualiza completamente un registro existente")
     @PutMapping("/{id}")
     public ResponseEntity<Order> actualizar(@PathVariable Long id, @Valid @RequestBody OrderDTO dto) {
         log.info("Petición PUT para actualizar Order con ID: {}", id);
@@ -95,7 +96,7 @@ public class OrderController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
+    @Operation(summary = "Eliminar registro", description = "Elimina un registro de la base de datos por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Order con ID: {}", id);

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "Payment", description = "Operaciones del microservicio de Payment")
 @RestController
 @RequestMapping("/api/v1/payment")
 @Slf4j
@@ -24,7 +25,7 @@ public class PaymentController {
     @Autowired
     private PaymentService service;
 
-    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
+    @Operation(summary = "Obtener todos los registros", description = "Retorna una lista completa de entidades")
     @GetMapping
     public ResponseEntity<List<Payment>> buscarTodos() {
         log.info("Petición GET para listar todos los Payments");
@@ -36,7 +37,7 @@ public class PaymentController {
         return ResponseEntity.ok(lista);
     }
 
-    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
+    @Operation(summary = "Buscar por ID", description = "Busca un registro específico por su identificador único")
     @GetMapping("/{id}")
     public ResponseEntity<Payment> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para obtener Payment con ID: {}", id);
@@ -44,7 +45,7 @@ public class PaymentController {
         return ResponseEntity.ok(entity);
     }
 
-    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
+    @Operation(summary = "Crear nuevo registro", description = "Registra una nueva entidad en la base de datos")
     @PostMapping
     public ResponseEntity<Payment> crear(@Valid @RequestBody PaymentDTO dto) {
         log.info("Procesando pago para la orden ID: {}", dto.getOrderId());
@@ -60,7 +61,7 @@ public class PaymentController {
         return ResponseEntity.ok(saved);
     }
 
-    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
+    @Operation(summary = "Actualizar registro", description = "Actualiza completamente un registro existente")
     @PutMapping("/{id}")
     public ResponseEntity<Payment> actualizar(@PathVariable Long id, @Valid @RequestBody PaymentDTO dto) {
         log.info("Petición PUT para actualizar Payment con ID: {}", id);
@@ -75,7 +76,7 @@ public class PaymentController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
+    @Operation(summary = "Eliminar registro", description = "Elimina un registro de la base de datos por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Payment con ID: {}", id);

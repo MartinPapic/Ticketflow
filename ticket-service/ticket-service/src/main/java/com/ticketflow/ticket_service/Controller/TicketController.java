@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "Ticket", description = "Operaciones del microservicio de Ticket")
 @RestController
 @RequestMapping("/api/v1/ticket")
 @Slf4j
@@ -22,7 +23,7 @@ public class TicketController {
     @Autowired
     private TicketService service;
 
-    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
+    @Operation(summary = "Obtener todos los registros", description = "Retorna una lista completa de entidades")
     @GetMapping
     public ResponseEntity<List<Ticket>> buscarTodos() {
         log.info("Buscando todos los tickets");
@@ -34,7 +35,7 @@ public class TicketController {
         return ResponseEntity.ok(lista);
     }
 
-    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
+    @Operation(summary = "Buscar por ID", description = "Busca un registro específico por su identificador único")
     @GetMapping("/{id}")
     public ResponseEntity<Ticket> buscarPorId(@PathVariable Long id) {
         log.info("Buscando ticket con ID: {}", id);
@@ -46,7 +47,7 @@ public class TicketController {
         return ResponseEntity.ok(entity);
     }
 
-    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
+    @Operation(summary = "Crear nuevo registro", description = "Registra una nueva entidad en la base de datos")
     @PostMapping
     public ResponseEntity<Ticket> crear(@Valid @RequestBody TicketDTO dto) {
         log.info("Creando nuevo ticket para el evento ID: {}", dto.getEventId());
@@ -62,7 +63,7 @@ public class TicketController {
         return ResponseEntity.ok(saved);
     }
 
-    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
+    @Operation(summary = "Actualizar registro", description = "Actualiza completamente un registro existente")
     @PutMapping("/{id}")
     public ResponseEntity<Ticket> actualizar(@PathVariable Long id, @Valid @RequestBody TicketDTO dto) {
         log.info("Petición PUT para actualizar ticket con ID: {}", id);
@@ -77,7 +78,7 @@ public class TicketController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
+    @Operation(summary = "Eliminar registro", description = "Elimina un registro de la base de datos por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Eliminando ticket con ID: {}", id);

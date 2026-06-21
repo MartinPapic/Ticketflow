@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "User", description = "Operaciones del microservicio de User")
 @RestController
 @RequestMapping("/api/v1/user")
 @Slf4j
@@ -23,7 +24,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
+    @Operation(summary = "Obtener todos los registros", description = "Retorna una lista completa de entidades")
     @GetMapping
     public ResponseEntity<List<User>> buscarTodos() {
         log.info("Petición GET para listar todos los usuarios");
@@ -35,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok(lista);
     }
 
-    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
+    @Operation(summary = "Buscar por ID", description = "Busca un registro específico por su identificador único")
     @GetMapping("/{id}")
     public ResponseEntity<User> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para buscar usuario con ID: {}", id);
@@ -43,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(entity);
     }
 
-    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
+    @Operation(summary = "Crear nuevo registro", description = "Registra una nueva entidad en la base de datos")
     @PostMapping
     public ResponseEntity<User> crear(@Valid @RequestBody UserDTO dto) {
         log.info("Petición POST para crear usuario con username: {}", dto.getUsername());
@@ -62,7 +63,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
+    @Operation(summary = "Actualizar registro", description = "Actualiza completamente un registro existente")
     @PutMapping("/{id}")
     public ResponseEntity<User> actualizar(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
         log.info("Petición PUT para actualizar usuario con ID: {}", id);
@@ -80,7 +81,7 @@ public class UserController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
+    @Operation(summary = "Eliminar registro", description = "Elimina un registro de la base de datos por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar usuario con ID: {}", id);

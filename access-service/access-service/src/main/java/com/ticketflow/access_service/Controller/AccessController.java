@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+@Tag(name = "Access", description = "Operaciones del microservicio de Access")
 @RestController
 @RequestMapping("/api/v1/access")
 @Slf4j
@@ -24,7 +25,7 @@ public class AccessController {
     @Autowired
     private AccessService service;
 
-    @Operation(summary = "Get all entities", description = "Retrieves a list of all entities")
+    @Operation(summary = "Obtener todos los registros", description = "Retorna una lista completa de entidades")
     @GetMapping
     public ResponseEntity<List<Access>> buscarTodos() {
         log.info("Petición GET para listar todos los Accesss");
@@ -36,7 +37,7 @@ public class AccessController {
         return ResponseEntity.ok(lista);
     }
 
-    @Operation(summary = "Get entity by ID", description = "Retrieves an entity by its identifier")
+    @Operation(summary = "Buscar por ID", description = "Busca un registro específico por su identificador único")
     @GetMapping("/{id}")
     public ResponseEntity<Access> buscarPorId(@PathVariable Long id) {
         log.info("Petición GET para obtener Access con ID: {}", id);
@@ -44,7 +45,7 @@ public class AccessController {
         return ResponseEntity.ok(entity);
     }
 
-    @Operation(summary = "Create entity", description = "Creates a new entity in the system")
+    @Operation(summary = "Crear nuevo registro", description = "Registra una nueva entidad en la base de datos")
     @PostMapping
     public ResponseEntity<Access> crear(@Valid @RequestBody AccessDTO dto) {
         log.info("Registrando acceso para ticket ID: {} en puerta: {}", dto.getTicketId(), dto.getGate());
@@ -59,7 +60,7 @@ public class AccessController {
         return ResponseEntity.ok(saved);
     }
 
-    @Operation(summary = "Update entity", description = "Updates an existing entity by its identifier")
+    @Operation(summary = "Actualizar registro", description = "Actualiza completamente un registro existente")
     @PutMapping("/{id}")
     public ResponseEntity<Access> actualizar(@PathVariable Long id, @Valid @RequestBody AccessDTO dto) {
         log.info("Petición PUT para actualizar Access con ID: {}", id);
@@ -73,7 +74,7 @@ public class AccessController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete entity", description = "Deletes an entity by its identifier")
+    @Operation(summary = "Eliminar registro", description = "Elimina un registro de la base de datos por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         log.info("Petición DELETE para eliminar Access con ID: {}", id);
